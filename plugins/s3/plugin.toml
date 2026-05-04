@@ -1,0 +1,24 @@
+id = "s3"
+version = "0.1.0"
+description = "S3-compatible object storage — put, get, list, delete (AWS S3, R2, MinIO, B2)"
+author = "taskhub"
+license = "MIT"
+
+[[actions]]
+id = "put"
+description = "Upload an object. Input: {endpoint?: string, region?: string, access_key, secret_key, bucket, key, body: string, content_type?}. Output: {ok: true}"
+
+[[actions]]
+id = "get"
+description = "Download an object as text. Input: {endpoint?, region?, access_key, secret_key, bucket, key}. Output: {body: string, content_type}"
+
+[[actions]]
+id = "list"
+description = "List objects in a bucket/prefix. Input: {endpoint?, region?, access_key, secret_key, bucket, prefix?}. Output: [{key, size, last_modified}]"
+
+[[actions]]
+id = "delete"
+description = "Delete an object. Input: {endpoint?, region?, access_key, secret_key, bucket, key}. Output: {ok: true}"
+
+[permissions]
+network = ["*"]

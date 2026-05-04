@@ -1,0 +1,36 @@
+name: llm-summarize
+description: Summarize RSS feed entries using Claude and post to Slack
+
+on:
+  trigger: schedule
+  every: 6h
+
+steps:
+  - id: feed
+    uses: rss/fetch
+    with:
+      url: https://lobste.rs/rss
+      limit: 10
+
+  - id: titles
+    uses: core/transform
+    with:
+      action: json.stringify
+      input: ${{ steps.feed.output }}
+
+  - id: summary
+    uses: llm/chat
+    with:
+      provider: anthropic
+      api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+      model: claude-haiku-4-5-20251001
+      messages:
+        - role: user
+          content: "Summarize these tech articles in 3 bullet points: ${{ steps.titles.output }}"
+
+  - id: notify
+    uses: slack/send
+    with:
+      token: ${{ secrets.SLACK_TOKEN }}
+      channel: "#tech-digest"
+      text: "${{ steps.summary.output.text }}"

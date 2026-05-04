@@ -1,0 +1,14 @@
+name: slack-alert
+description: Send a Slack message on webhook trigger
+
+on:
+  trigger: webhook
+  path: /slack-alert
+
+steps:
+  - id: send
+    uses: slack/send
+    with:
+      token: ${{ secrets.SLACK_TOKEN }}
+      channel: "#alerts"
+      text: "Alert received: ${{ trigger.body.message }}"

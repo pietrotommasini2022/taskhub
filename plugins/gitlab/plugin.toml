@@ -1,0 +1,24 @@
+id = "gitlab"
+version = "0.1.0"
+description = "GitLab todos, merge requests, and issues"
+author = "taskhub"
+license = "MIT"
+
+[[actions]]
+id = "todos.list"
+description = "List GitLab todos. Input: {token: string, host?: string}. Output: [{id, title, type, project, state}]"
+
+[[actions]]
+id = "todos.mark_done"
+description = "Mark a todo as done. Input: {token, id: number, host?}. Output: {ok: true}"
+
+[[actions]]
+id = "merge_requests.list"
+description = "List MRs for a project. Input: {token, project_id: string, state?, host?}. Output: [{iid, title, state, url, draft}]"
+
+[[actions]]
+id = "issues.list"
+description = "List issues for a project. Input: {token, project_id: string, state?, host?}. Output: [{iid, title, state, url}]"
+
+[permissions]
+network = ["gitlab.com"]

@@ -1,0 +1,35 @@
+name: transform-etl
+description: Fetch JSON API, transform data inline, store to SQLite
+
+on:
+  trigger: schedule
+  every: 1h
+
+steps:
+  - id: fetch
+    uses: core/http
+    with:
+      method: GET
+      url: https://api.example.com/metrics
+
+  - id: extract_value
+    uses: core/transform
+    with:
+      action: jq
+      query: ".metrics.latency_p99"
+      input: ${{ steps.fetch.output.body }}
+
+  - id: validate
+    uses: core/transform
+    with:
+      action: regex.match
+      pattern: "^[0-9]+(\\.[0-9]+)?$"
+      input: ${{ steps.extract_value.output }}
+
+  - id: store
+    uses: sqlite/execute
+    with:
+      path: ~/data/metrics.db
+      sql: "INSERT INTO latency (value, ts) VALUES (?, strftime('%s', 'now'))"
+      params:
+        - ${{ steps.extract_value.output }}

@@ -1,0 +1,16 @@
+name: discord-deploy
+description: Notify Discord when a file changes (deploy script)
+
+on:
+  trigger: filesystem
+  watch_path: ~/projects/myapp
+  patterns: ["*.lock"]
+  events: [modify]
+
+steps:
+  - id: notify
+    uses: discord/webhook.send
+    with:
+      url: ${{ secrets.DISCORD_WEBHOOK_URL }}
+      content: "Lock file changed in myapp — possible dependency update"
+      username: "TaskHub"

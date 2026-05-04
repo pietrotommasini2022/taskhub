@@ -1,0 +1,24 @@
+name: calendar-reminder
+description: Check calendar events starting in the next hour and send Slack reminders
+
+on:
+  trigger: schedule
+  every: 15m
+
+steps:
+  - id: events
+    uses: calendar_caldav/events.list
+    with:
+      url: ${{ secrets.CALDAV_URL }}
+      username: ${{ secrets.CALDAV_USER }}
+      password: ${{ secrets.CALDAV_PASS }}
+      start_iso: "2024-01-01T00:00:00Z"
+      end_iso: "2024-01-01T01:00:00Z"
+
+  - id: remind
+    uses: slack/send
+    for_each: ${{ steps.events.output }}
+    with:
+      token: ${{ secrets.SLACK_TOKEN }}
+      channel: "#reminders"
+      text: "Upcoming: ${{ item.summary }} at ${{ item.dtstart }}"

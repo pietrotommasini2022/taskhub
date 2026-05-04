@@ -1,0 +1,16 @@
+id = "calendar_caldav"
+version = "0.1.0"
+description = "CalDAV calendar — list and create events"
+author = "taskhub"
+license = "MIT"
+
+[[actions]]
+id = "events.list"
+description = "List calendar events in a time range. Input: {url: string, username: string, password: string, start_iso: string, end_iso: string}. Output: [{uid, summary, dtstart, dtend, location?}]"
+
+[[actions]]
+id = "events.create"
+description = "Create a calendar event. Input: {url, username, password, summary, dtstart, dtend, description?, location?}. Output: {uid, url}"
+
+[permissions]
+network = ["*"]

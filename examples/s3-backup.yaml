@@ -1,0 +1,25 @@
+name: s3-backup
+description: Back up a local file to S3 on filesystem change
+
+on:
+  trigger: filesystem
+  watch_path: ~/data
+  patterns: ["*.db"]
+  events: [modify]
+
+steps:
+  - id: read_file
+    uses: core/shell
+    with:
+      command: ["cat", "${{ trigger.path }}"]
+
+  - id: upload
+    uses: s3/put
+    with:
+      access_key: ${{ secrets.AWS_ACCESS_KEY }}
+      secret_key: ${{ secrets.AWS_SECRET_KEY }}
+      region: us-east-1
+      bucket: my-backups
+      key: "data/${{ trigger.path }}"
+      body: ${{ steps.read_file.output.stdout }}
+      content_type: application/octet-stream

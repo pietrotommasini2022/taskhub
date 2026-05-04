@@ -1,0 +1,18 @@
+name: notion-log
+description: Create a Notion page for each webhook event (log incoming events)
+
+on:
+  trigger: webhook
+  path: /log-event
+
+steps:
+  - id: create_page
+    uses: notion/page.create
+    with:
+      token: ${{ secrets.NOTION_TOKEN }}
+      parent_id: ${{ secrets.NOTION_DATABASE_ID }}
+      title: "Event: ${{ trigger.body.type }}"
+      properties:
+        Status:
+          select:
+            name: "New"

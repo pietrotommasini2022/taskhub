@@ -1,0 +1,21 @@
+name: rss-to-slack
+description: Post new RSS entries from Hacker News to Slack every hour
+
+on:
+  trigger: schedule
+  every: 1h
+
+steps:
+  - id: fetch
+    uses: rss/fetch
+    with:
+      url: https://news.ycombinator.com/rss
+      limit: 5
+
+  - id: post
+    uses: slack/send
+    for_each: ${{ steps.fetch.output }}
+    with:
+      token: ${{ secrets.SLACK_TOKEN }}
+      channel: "#hn-feed"
+      text: "${{ item.title }} — ${{ item.link }}"

@@ -1,0 +1,12 @@
+target/
+plugins/*/target/
+*.lock.bak
+.env
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+~/.taskhub/
+dist/
+PROJECT.md
+SPEC.md

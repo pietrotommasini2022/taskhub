@@ -1,0 +1,27 @@
+name: linear-triage
+description: List unstarted Linear issues and post summary to Slack daily
+
+on:
+  trigger: schedule
+  every: 1d
+
+steps:
+  - id: issues
+    uses: linear/issues.list
+    with:
+      token: ${{ secrets.LINEAR_API_KEY }}
+      state: "Unstarted"
+      limit: 10
+
+  - id: summary
+    uses: core/transform
+    with:
+      action: json.stringify
+      input: ${{ steps.issues.output }}
+
+  - id: notify
+    uses: slack/send
+    with:
+      token: ${{ secrets.SLACK_TOKEN }}
+      channel: "#engineering"
+      text: "Unstarted issues: ${{ steps.summary.output }}"

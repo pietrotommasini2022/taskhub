@@ -1,0 +1,20 @@
+id = "llm"
+version = "0.1.0"
+description = "LLM completions and chat — Anthropic, OpenAI, Ollama, OpenRouter"
+author = "taskhub"
+license = "MIT"
+
+[[actions]]
+id = "complete"
+description = "Text completion. Input: {provider: anthropic|openai|ollama|openrouter, api_key?, model?, prompt, max_tokens?, temperature?}. Output: {text, usage}"
+
+[[actions]]
+id = "chat"
+description = "Chat completion. Input: {provider, api_key?, model?, messages: [{role, content}], system?, max_tokens?, temperature?}. Output: {text, usage}"
+
+[[actions]]
+id = "embed"
+description = "Generate embeddings. Input: {provider: anthropic|openai, api_key, model?, input: string}. Output: {embedding: [float], model}"
+
+[permissions]
+network = ["api.anthropic.com", "api.openai.com", "openrouter.ai", "localhost"]

@@ -1,0 +1,127 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build ${{ matrix.target }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            target: x86_64-pc-windows-msvc
+            binary: taskhub.exe
+            archive: taskhub-windows-x86_64.zip
+          - os: macos-latest
+            target: x86_64-apple-darwin
+            binary: taskhub
+            archive: taskhub-macos-x86_64.tar.gz
+          - os: macos-latest
+            target: aarch64-apple-darwin
+            binary: taskhub
+            archive: taskhub-macos-aarch64.tar.gz
+          - os: ubuntu-22.04
+            target: x86_64-unknown-linux-gnu
+            binary: taskhub
+            archive: taskhub-linux-x86_64.tar.gz
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install system deps (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            pkg-config \
+            libgtk-3-dev \
+            libglib2.0-dev \
+            libssl-dev \
+            libxdo-dev \
+            libayatana-appindicator3-dev
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }},wasm32-unknown-unknown
+
+      - name: Cache cargo
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+
+      - name: Build binary
+        run: cargo build --release --target ${{ matrix.target }} --bin taskhub
+
+      - name: Build WASM plugins
+        shell: bash
+        run: |
+          mkdir -p dist/plugins
+          for plugin in weather github gitlab slack discord rss linear notion calendar_caldav s3 llm; do
+            src="plugins/$plugin"
+            if [ -f "$src/Cargo.toml" ]; then
+              echo "Building $plugin..."
+              (cd "$src" && cargo build --release --target wasm32-unknown-unknown)
+              wasm=$(find "$src/target/wasm32-unknown-unknown/release" -maxdepth 1 -name "*.wasm" | head -1)
+              if [ -n "$wasm" ]; then
+                plugin_id=$(grep '^id' "$src/plugin.toml" | head -1 | sed 's/id = "\(.*\)"/\1/')
+                mkdir -p "dist/plugins/$plugin_id"
+                cp "$src/plugin.toml" "dist/plugins/$plugin_id/"
+                cp "$wasm" "dist/plugins/$plugin_id/plugin.wasm"
+              fi
+            fi
+          done
+
+      - name: Prepare archive (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $bin = "target/${{ matrix.target }}/release/${{ matrix.binary }}"
+          New-Item -ItemType Directory -Force -Path dist
+          Copy-Item $bin dist/
+          Copy-Item README.md dist/
+          Copy-Item workflow.schema.json dist/
+          Copy-Item -Recurse examples dist/examples
+          Compress-Archive -Path dist/* -DestinationPath ${{ matrix.archive }}
+
+      - name: Prepare archive (Unix)
+        if: runner.os != 'Windows'
+        run: |
+          cp target/${{ matrix.target }}/release/${{ matrix.binary }} dist/
+          cp README.md dist/
+          cp workflow.schema.json dist/
+          cp -r examples dist/examples
+          tar -czf ${{ matrix.archive }} -C dist .
+
+      - name: Upload to release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ matrix.archive }}
+          draft: false
+          prerelease: ${{ contains(github.ref_name, 'beta') || contains(github.ref_name, 'alpha') }}
+
+  publish-install-scripts:
+    name: Publish install scripts
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/checkout@v4
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            install.sh
+            install.ps1
+          draft: false
+          prerelease: ${{ contains(github.ref_name, 'beta') || contains(github.ref_name, 'alpha') }}

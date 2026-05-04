@@ -1,0 +1,24 @@
+id = "slack"
+version = "0.1.0"
+description = "Send messages and react on Slack"
+author = "taskhub"
+license = "MIT"
+
+[[actions]]
+id = "send"
+description = "Send a message to a channel. Input: {token: string, channel: string, text: string, blocks?}. Output: {ts, channel}"
+
+[[actions]]
+id = "send_thread"
+description = "Reply in a thread. Input: {token, channel, thread_ts: string, text: string}. Output: {ts, channel}"
+
+[[actions]]
+id = "react"
+description = "Add a reaction. Input: {token, channel, timestamp: string, name: string}. Output: {ok: true}"
+
+[[actions]]
+id = "upload_file"
+description = "Upload a file. Input: {token, channel, content: string, filename: string, title?}. Output: {id, url}"
+
+[permissions]
+network = ["slack.com"]

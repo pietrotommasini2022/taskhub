@@ -1,0 +1,31 @@
+[package]
+name = "taskhub-core"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "TaskHub core engine: types, storage, scheduler, workflow execution"
+
+[dependencies]
+tokio.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+serde_yaml.workspace = true
+anyhow.workspace = true
+thiserror.workspace = true
+tracing.workspace = true
+rusqlite.workspace = true
+uuid.workspace = true
+chrono.workspace = true
+cron.workspace = true
+async-trait.workspace = true
+tokio-cron-scheduler.workspace = true
+axum.workspace        = true
+notify.workspace      = true
+age.workspace         = true
+keyring.workspace     = true
+reqwest.workspace     = true
+tokio-stream.workspace = true
+futures.workspace     = true
+shellexpand.workspace = true
+dirs.workspace        = true

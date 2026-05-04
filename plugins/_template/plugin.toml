@@ -1,0 +1,17 @@
+[plugin]
+id = "{{plugin_name}}"
+version = "0.1.0"
+description = "A TaskHub plugin"
+author = ""
+license = "MIT"
+
+[[actions]]
+id = "run"
+description = "Default action"
+
+[permissions]
+# Uncomment and fill to grant permissions:
+# network = ["api.example.com"]
+# filesystem = ["read:~/Downloads"]
+# secrets = ["MY_API_KEY"]
+# shell = false

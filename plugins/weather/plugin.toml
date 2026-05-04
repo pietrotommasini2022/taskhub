@@ -1,0 +1,12 @@
+id = "weather"
+version = "0.1.0"
+description = "Get current weather for any city via wttr.in"
+author = "taskhub"
+license = "MIT"
+
+[[actions]]
+id = "get"
+description = "Get current weather. Input: {city: string}. Output: {city, temp_c, condition, wind_kmh, humidity_pct}"
+
+[permissions]
+network = ["wttr.in"]

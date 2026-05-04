@@ -1,0 +1,23 @@
+name: weather-report
+description: Send morning weather report to Slack
+
+on:
+  trigger: schedule
+  cron: "0 8 * * *"
+
+steps:
+  - id: weather
+    uses: weather/get
+    with:
+      city: Milan
+
+  - id: notify
+    uses: slack/send
+    with:
+      token: ${{ secrets.SLACK_TOKEN }}
+      channel: "#general"
+      text: |
+        Morning weather for ${{ steps.weather.output.city }}:
+        🌡 ${{ steps.weather.output.temp_c }}°C — ${{ steps.weather.output.condition }}
+        💨 Wind: ${{ steps.weather.output.wind_kmh }} km/h
+        💧 Humidity: ${{ steps.weather.output.humidity_pct }}%

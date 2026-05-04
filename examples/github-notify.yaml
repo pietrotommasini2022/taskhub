@@ -1,0 +1,22 @@
+name: github-notify
+description: Check GitHub notifications every 5 minutes and send unread ones to Slack
+
+on:
+  trigger: schedule
+  every: 5m
+
+steps:
+  - id: notifications
+    uses: github/notifications.list
+    with:
+      token: ${{ secrets.GITHUB_TOKEN }}
+      all: false
+
+  - id: notify
+    uses: slack/send
+    if: ${{ steps.notifications.output | length > 0 }}
+    for_each: ${{ steps.notifications.output }}
+    with:
+      token: ${{ secrets.SLACK_TOKEN }}
+      channel: "#dev-alerts"
+      text: "GitHub: ${{ item.title }} in ${{ item.repo }}"

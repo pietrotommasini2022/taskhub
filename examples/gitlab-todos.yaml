@@ -1,0 +1,18 @@
+name: gitlab-todos
+description: Post GitLab todos to Discord daily
+
+on:
+  trigger: schedule
+  every: 1d
+
+steps:
+  - id: todos
+    uses: gitlab/todos.list
+    with:
+      token: ${{ secrets.GITLAB_TOKEN }}
+
+  - id: notify
+    uses: discord/webhook.send
+    with:
+      url: ${{ secrets.DISCORD_WEBHOOK_URL }}
+      content: "GitLab todos: ${{ steps.todos.output | length }} pending"

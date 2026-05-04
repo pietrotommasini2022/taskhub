@@ -1,0 +1,29 @@
+name: postgres-report
+description: Query PostgreSQL for daily active users and email a report
+
+on:
+  trigger: schedule
+  every: 1d
+
+steps:
+  - id: dau
+    uses: postgres/query
+    with:
+      connection: ${{ secrets.DATABASE_URL }}
+      sql: |
+        SELECT DATE(created_at) as day, COUNT(*) as users
+        FROM user_sessions
+        WHERE created_at > NOW() - INTERVAL '1 day'
+        GROUP BY 1
+
+  - id: report
+    uses: email_smtp/send
+    with:
+      host: smtp.gmail.com
+      port: 587
+      username: ${{ secrets.EMAIL_USER }}
+      password: ${{ secrets.EMAIL_PASS }}
+      from: ${{ secrets.EMAIL_USER }}
+      to: team@example.com
+      subject: "Daily Active Users Report"
+      body: "DAU stats: ${{ steps.dau.output }}"

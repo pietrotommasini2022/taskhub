@@ -1,0 +1,24 @@
+name: sqlite-log
+description: Log webhook events to a local SQLite database
+
+on:
+  trigger: webhook
+  path: /events
+
+steps:
+  - id: insert
+    uses: sqlite/execute
+    with:
+      path: ~/data/events.db
+      sql: |
+        CREATE TABLE IF NOT EXISTS events (id INTEGER PRIMARY KEY, type TEXT, payload TEXT, ts INTEGER);
+        INSERT INTO events (type, payload, ts) VALUES (?, ?, strftime('%s', 'now'));
+      params:
+        - ${{ trigger.body.type }}
+        - ${{ trigger.body | json.stringify }}
+
+  - id: recent
+    uses: sqlite/query
+    with:
+      path: ~/data/events.db
+      sql: "SELECT * FROM events ORDER BY ts DESC LIMIT 5"

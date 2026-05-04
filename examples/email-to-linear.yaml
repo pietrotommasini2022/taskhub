@@ -1,0 +1,37 @@
+name: email-to-linear
+description: Create a Linear issue for every unread support email
+
+on:
+  trigger: schedule
+  every: 10m
+
+steps:
+  - id: emails
+    uses: email_imap/inbox.list
+    with:
+      host: imap.gmail.com
+      port: 993
+      username: ${{ secrets.EMAIL_USER }}
+      password: ${{ secrets.EMAIL_PASS }}
+      mailbox: INBOX
+      query: "UNSEEN SUBJECT \"[Support]\""
+      limit: 5
+
+  - id: create_issue
+    uses: linear/issues.create
+    for_each: ${{ steps.emails.output }}
+    with:
+      token: ${{ secrets.LINEAR_API_KEY }}
+      team_id: ${{ secrets.LINEAR_TEAM_ID }}
+      title: "${{ item.subject }}"
+      description: "From: ${{ item.from }}\nReceived: ${{ item.date }}"
+
+  - id: mark_read
+    uses: email_imap/mark_read
+    for_each: ${{ steps.emails.output }}
+    with:
+      host: imap.gmail.com
+      port: 993
+      username: ${{ secrets.EMAIL_USER }}
+      password: ${{ secrets.EMAIL_PASS }}
+      uid: "${{ item.uid }}"

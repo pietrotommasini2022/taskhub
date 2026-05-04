@@ -1,0 +1,40 @@
+id = "github"
+version = "0.1.0"
+description = "GitHub notifications, issues, pull requests, and repository dispatch"
+author = "taskhub"
+license = "MIT"
+
+[[actions]]
+id = "notifications.list"
+description = "List GitHub notifications. Input: {token: string, all?: bool}. Output: [{id, title, type, repo, unread, updated_at}]"
+
+[[actions]]
+id = "notifications.mark_read"
+description = "Mark all notifications as read. Input: {token: string}. Output: {ok: true}"
+
+[[actions]]
+id = "issues.list"
+description = "List repository issues. Input: {token: string, owner: string, repo: string, state?: string, labels?: string}. Output: [{number, title, state, url, labels, created_at}]"
+
+[[actions]]
+id = "issues.create"
+description = "Create an issue. Input: {token, owner, repo, title, body?, labels?}. Output: {number, url}"
+
+[[actions]]
+id = "issues.comment"
+description = "Comment on an issue. Input: {token, owner, repo, number, body}. Output: {id, url}"
+
+[[actions]]
+id = "pulls.list"
+description = "List pull requests. Input: {token, owner, repo, state?}. Output: [{number, title, state, url, draft}]"
+
+[[actions]]
+id = "pulls.review"
+description = "Submit a PR review. Input: {token, owner, repo, pull_number, event, body?}. Output: {id, state}"
+
+[[actions]]
+id = "repo.dispatch"
+description = "Trigger a repository dispatch event. Input: {token, owner, repo, event_type, client_payload?}. Output: {ok: true}"
+
+[permissions]
+network = ["api.github.com"]

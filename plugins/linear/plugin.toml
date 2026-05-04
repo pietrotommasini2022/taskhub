@@ -1,0 +1,24 @@
+id = "linear"
+version = "0.1.0"
+description = "Linear issue tracking — list, create, update, comment"
+author = "taskhub"
+license = "MIT"
+
+[[actions]]
+id = "issues.list"
+description = "List issues. Input: {token: string, team_id?: string, state?: string, limit?}. Output: [{id, title, state, priority, url}]"
+
+[[actions]]
+id = "issues.create"
+description = "Create an issue. Input: {token, team_id, title, description?, priority?}. Output: {id, url}"
+
+[[actions]]
+id = "issues.update"
+description = "Update an issue. Input: {token, issue_id: string, title?, state_id?, priority?}. Output: {id, url}"
+
+[[actions]]
+id = "issues.comment"
+description = "Comment on an issue. Input: {token, issue_id: string, body: string}. Output: {id}"
+
+[permissions]
+network = ["api.linear.app"]

@@ -1,0 +1,12 @@
+id = "discord"
+version = "0.1.0"
+description = "Send messages to Discord via webhook"
+author = "taskhub"
+license = "MIT"
+
+[[actions]]
+id = "webhook.send"
+description = "Send a message via Discord webhook. Input: {url: string, content?: string, embeds?: array, username?}. Output: {ok: true}"
+
+[permissions]
+network = ["discord.com"]

@@ -1,0 +1,24 @@
+[package]
+name = "taskhub-cli"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "TaskHub CLI — the `taskhub` binary"
+
+[[bin]]
+name = "taskhub"
+path = "src/main.rs"
+
+[dependencies]
+taskhub-core         = { path = "../taskhub-core" }
+taskhub-plugins-core = { path = "../taskhub-plugins-core" }
+taskhub-wasm-host    = { path = "../taskhub-wasm-host" }
+tokio.workspace = true
+clap.workspace  = true
+anyhow.workspace = true
+tracing.workspace = true
+tracing-subscriber.workspace = true
+dirs.workspace    = true
+rpassword.workspace = true
+tray-icon.workspace = true

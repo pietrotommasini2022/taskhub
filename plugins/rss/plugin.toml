@@ -1,0 +1,16 @@
+id = "rss"
+version = "0.1.0"
+description = "Fetch and parse RSS/Atom feeds (no XXE, size-limited)"
+author = "taskhub"
+license = "MIT"
+
+[[actions]]
+id = "fetch"
+description = "Fetch RSS/Atom feed entries. Input: {url: string, limit?: number}. Output: [{title, link, published, summary}]"
+
+[[actions]]
+id = "check_new"
+description = "Return entries newer than a given timestamp. Input: {url, since_iso: string, limit?}. Output: [{title, link, published, summary}]"
+
+[permissions]
+network = ["*"]

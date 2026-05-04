@@ -1,0 +1,25 @@
+[package]
+name = "taskhub-plugins-core"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+description = "TaskHub built-in plugins: core/http, core/shell, core/schedule, core/webhook, core/filesystem"
+
+[dependencies]
+taskhub-core     = { path = "../taskhub-core" }
+tokio.workspace  = true
+serde.workspace  = true
+serde_json.workspace = true
+anyhow.workspace = true
+thiserror.workspace = true
+tracing.workspace = true
+async-trait.workspace = true
+reqwest.workspace = true
+shellexpand.workspace = true
+rusqlite.workspace = true
+regex.workspace = true
+lettre.workspace = true
+imap.workspace = true
+native-tls.workspace = true
+tokio-postgres.workspace = true

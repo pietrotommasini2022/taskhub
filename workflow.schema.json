@@ -1,0 +1,185 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/pietroairoldi/taskhub/raw/main/workflow.schema.json",
+  "title": "TaskHub Workflow",
+  "description": "Schema for TaskHub workflow YAML files",
+  "type": "object",
+  "required": ["name", "on", "steps"],
+  "additionalProperties": false,
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Unique workflow identifier (slug format recommended)"
+    },
+    "description": {
+      "type": "string",
+      "description": "Human-readable description of what this workflow does"
+    },
+    "on": {
+      "$ref": "#/definitions/TriggerConfig"
+    },
+    "steps": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/Step" },
+      "minItems": 1
+    }
+  },
+  "definitions": {
+    "TriggerConfig": {
+      "type": "object",
+      "required": ["trigger"],
+      "properties": {
+        "trigger": {
+          "type": "string",
+          "enum": ["manual", "schedule", "webhook", "filesystem"],
+          "description": "How this workflow is triggered"
+        },
+        "every": {
+          "type": "string",
+          "pattern": "^(\\d+[smhd])+$",
+          "description": "Polling interval for schedule triggers (e.g. 5m, 1h, 30s)"
+        },
+        "cron": {
+          "type": "string",
+          "description": "Cron expression for schedule triggers (e.g. '0 8 * * *')"
+        },
+        "path": {
+          "type": "string",
+          "description": "URL path for webhook triggers (e.g. /my-hook)"
+        },
+        "watch_path": {
+          "type": "string",
+          "description": "Filesystem path to watch (supports ~ expansion)"
+        },
+        "patterns": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Glob patterns to filter filesystem events (e.g. ['*.yaml', '*.toml'])"
+        },
+        "events": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["create", "modify", "delete", "access"]
+          },
+          "description": "Filesystem event types to watch for"
+        },
+        "recursive": {
+          "type": "boolean",
+          "default": false,
+          "description": "Watch directory recursively"
+        },
+        "debounce": {
+          "type": "string",
+          "description": "Debounce delay for filesystem events (e.g. 2s)"
+        }
+      }
+    },
+    "Step": {
+      "type": "object",
+      "required": ["id", "uses"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_-]*$",
+          "description": "Step identifier, used for referencing outputs: ${{ steps.<id>.output }}"
+        },
+        "uses": {
+          "type": "string",
+          "description": "Action to run in plugin/action format (e.g. core/http, github/issues.list)",
+          "examples": [
+            "core/http",
+            "core/shell",
+            "core/transform",
+            "github/notifications.list",
+            "github/issues.list",
+            "github/issues.create",
+            "github/pulls.list",
+            "github/repo.dispatch",
+            "gitlab/todos.list",
+            "gitlab/merge_requests.list",
+            "slack/send",
+            "slack/send_thread",
+            "slack/react",
+            "slack/upload_file",
+            "discord/webhook.send",
+            "rss/fetch",
+            "rss/check_new",
+            "linear/issues.list",
+            "linear/issues.create",
+            "linear/issues.update",
+            "notion/database.query",
+            "notion/page.create",
+            "notion/page.update",
+            "calendar_caldav/events.list",
+            "calendar_caldav/events.create",
+            "s3/put",
+            "s3/get",
+            "s3/list",
+            "s3/delete",
+            "llm/complete",
+            "llm/chat",
+            "llm/embed",
+            "email_smtp/send",
+            "email_imap/inbox.list",
+            "email_imap/inbox.search",
+            "email_imap/mark_read",
+            "sqlite/query",
+            "sqlite/execute",
+            "sqlite/transaction",
+            "postgres/query",
+            "postgres/execute",
+            "weather/get"
+          ]
+        },
+        "with": {
+          "type": "object",
+          "description": "Input parameters for the action. Supports ${{ }} template expressions."
+        },
+        "if": {
+          "type": "string",
+          "description": "Condition expression — step is skipped if falsy"
+        },
+        "for_each": {
+          "type": "string",
+          "description": "Array expression — step runs once per item, ${{ item }} available"
+        },
+        "on_error": {
+          "type": "string",
+          "enum": ["fail", "continue", "retry"],
+          "default": "fail",
+          "description": "What to do if this step fails"
+        },
+        "retry": {
+          "$ref": "#/definitions/RetryConfig"
+        },
+        "timeout": {
+          "type": "string",
+          "description": "Step timeout (e.g. 30s, 5m)"
+        }
+      }
+    },
+    "RetryConfig": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "max_attempts": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10,
+          "default": 3
+        },
+        "backoff": {
+          "type": "string",
+          "enum": ["fixed", "exponential"],
+          "default": "exponential"
+        },
+        "delay": {
+          "type": "string",
+          "description": "Initial delay between retries (e.g. 1s, 30s)"
+        }
+      }
+    }
+  }
+}

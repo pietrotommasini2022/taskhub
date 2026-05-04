@@ -1,0 +1,24 @@
+id = "notion"
+version = "0.1.0"
+description = "Notion database queries, page create/update, block append"
+author = "taskhub"
+license = "MIT"
+
+[[actions]]
+id = "database.query"
+description = "Query a Notion database. Input: {token: string, database_id: string, filter?, sorts?, page_size?}. Output: [{id, properties, url}]"
+
+[[actions]]
+id = "page.create"
+description = "Create a Notion page. Input: {token, parent_id: string, title: string, properties?, children?}. Output: {id, url}"
+
+[[actions]]
+id = "page.update"
+description = "Update page properties. Input: {token, page_id: string, properties: object}. Output: {id, url}"
+
+[[actions]]
+id = "block.append"
+description = "Append blocks to a page. Input: {token, block_id: string, children: array}. Output: {ok: true}"
+
+[permissions]
+network = ["api.notion.com"]
