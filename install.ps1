@@ -1,6 +1,6 @@
 $ErrorActionPreference = "Stop"
 
-$Repo = "pietroairoldi/taskhub"
+$Repo = "pietrotommasini2022/taskhub"
 $InstallDir = "$env:USERPROFILE\.local\bin"
 
 $Release = Invoke-RestMethod "https://api.github.com/repos/$Repo/releases/latest"

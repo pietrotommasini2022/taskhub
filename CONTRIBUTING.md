@@ -15,7 +15,7 @@ TaskHub is solo-developed until M7 (public launch, ~month 10). External contribu
 Requirements: Rust stable (latest), `cargo`.
 
 ```sh
-git clone https://github.com/pietroairoldi/taskhub
+git clone https://github.com/pietrotommasini2022/taskhub
 cd taskhub
 cargo build
 cargo test

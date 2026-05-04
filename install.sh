@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 set -e
 
-REPO="pietroairoldi/taskhub"
+REPO="pietrotommasini2022/taskhub"
 BIN="taskhub"
 INSTALL_DIR="${INSTALL_DIR:-$HOME/.local/bin}"
 

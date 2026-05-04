@@ -1,10 +1,14 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://github.com/pietroairoldi/taskhub/raw/main/workflow.schema.json",
+  "$id": "https://github.com/pietrotommasini2022/taskhub/raw/main/workflow.schema.json",
   "title": "TaskHub Workflow",
   "description": "Schema for TaskHub workflow YAML files",
   "type": "object",
-  "required": ["name", "on", "steps"],
+  "required": [
+    "name",
+    "on",
+    "steps"
+  ],
   "additionalProperties": false,
   "properties": {
     "name": {
@@ -20,18 +24,27 @@
     },
     "steps": {
       "type": "array",
-      "items": { "$ref": "#/definitions/Step" },
+      "items": {
+        "$ref": "#/definitions/Step"
+      },
       "minItems": 1
     }
   },
   "definitions": {
     "TriggerConfig": {
       "type": "object",
-      "required": ["trigger"],
+      "required": [
+        "trigger"
+      ],
       "properties": {
         "trigger": {
           "type": "string",
-          "enum": ["manual", "schedule", "webhook", "filesystem"],
+          "enum": [
+            "manual",
+            "schedule",
+            "webhook",
+            "filesystem"
+          ],
           "description": "How this workflow is triggered"
         },
         "every": {
@@ -53,14 +66,21 @@
         },
         "patterns": {
           "type": "array",
-          "items": { "type": "string" },
+          "items": {
+            "type": "string"
+          },
           "description": "Glob patterns to filter filesystem events (e.g. ['*.yaml', '*.toml'])"
         },
         "events": {
           "type": "array",
           "items": {
             "type": "string",
-            "enum": ["create", "modify", "delete", "access"]
+            "enum": [
+              "create",
+              "modify",
+              "delete",
+              "access"
+            ]
           },
           "description": "Filesystem event types to watch for"
         },
@@ -77,7 +97,10 @@
     },
     "Step": {
       "type": "object",
-      "required": ["id", "uses"],
+      "required": [
+        "id",
+        "uses"
+      ],
       "additionalProperties": false,
       "properties": {
         "id": {
@@ -147,7 +170,11 @@
         },
         "on_error": {
           "type": "string",
-          "enum": ["fail", "continue", "retry"],
+          "enum": [
+            "fail",
+            "continue",
+            "retry"
+          ],
           "default": "fail",
           "description": "What to do if this step fails"
         },
@@ -172,7 +199,10 @@
         },
         "backoff": {
           "type": "string",
-          "enum": ["fixed", "exponential"],
+          "enum": [
+            "fixed",
+            "exponential"
+          ],
           "default": "exponential"
         },
         "delay": {

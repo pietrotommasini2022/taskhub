@@ -12,15 +12,15 @@ No cloud account. No Docker. No drag-and-drop editor. Just a binary, a YAML file
 
 **macOS / Linux**
 ```bash
-curl -fsSL https://github.com/pietroairoldi/taskhub/releases/latest/download/install.sh | sh
+curl -fsSL https://github.com/pietrotommasini2022/taskhub/releases/latest/download/install.sh | sh
 ```
 
 **Windows** (PowerShell)
 ```powershell
-irm https://github.com/pietroairoldi/taskhub/releases/latest/download/install.ps1 | iex
+irm https://github.com/pietrotommasini2022/taskhub/releases/latest/download/install.ps1 | iex
 ```
 
-Or download the archive for your platform directly from the [Releases page](https://github.com/pietroairoldi/taskhub/releases):
+Or download the archive for your platform directly from the [Releases page](https://github.com/pietrotommasini2022/taskhub/releases):
 
 | Platform | File |
 |---|---|
@@ -36,7 +36,7 @@ Extract and place the `taskhub` binary somewhere in your `PATH`.
 Requires [Rust](https://rustup.rs/) stable.
 
 ```bash
-git clone https://github.com/pietroairoldi/taskhub
+git clone https://github.com/pietrotommasini2022/taskhub
 cd taskhub
 cargo install --path crates/taskhub-cli
 ```
