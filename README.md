@@ -49,24 +49,27 @@ cargo install --path crates/taskhub-cli
 # 1. Initialize (~/.taskhub directory + SQLite database)
 taskhub init
 
-# 2. Store a secret (encrypted, never stored in plain text)
-taskhub secret set GITHUB_TOKEN
+# 2. Create your first workflow (opens $EDITOR, or prints path if unset)
+taskhub workflow new my-first-workflow
 
-# 3. Validate a workflow file
-taskhub validate examples/github-notify.yaml
+# 3. Run it
+taskhub run my-first-workflow
 
-# 4. Run a workflow once
-taskhub run examples/github-notify.yaml
-
-# 5. Start the daemon (schedule + webhook + filesystem triggers)
+# 4. Start the daemon (schedule + webhook + filesystem triggers)
 taskhub watch
 ```
+
+No arguments? Just run `taskhub` — interactive menu guides you through everything.
 
 ---
 
 ## Your first workflow
 
-Create `my-workflow.yaml`:
+```bash
+taskhub workflow new rss-digest   # creates ~/.taskhub/workflows/rss-digest.yaml and opens it
+```
+
+Or create the file manually:
 
 ```yaml
 name: rss-digest
@@ -94,8 +97,8 @@ steps:
 
 ```bash
 taskhub secret set SLACK_TOKEN
-taskhub run my-workflow.yaml
-taskhub watch   # keep it running with the cron trigger active
+taskhub run rss-digest          # name resolves to ~/.taskhub/workflows/rss-digest.yaml
+taskhub watch                   # keep it running with the cron trigger active
 ```
 
 ---
@@ -103,21 +106,30 @@ taskhub watch   # keep it running with the cron trigger active
 ## CLI reference
 
 ```
+taskhub                          Interactive menu (run with no arguments)
 taskhub init                     Initialize ~/.taskhub (run once)
-taskhub run <file>               Execute a workflow immediately
-taskhub test <file>              Dry-run — no network calls, no side effects
-taskhub validate <file>          Validate YAML syntax and step references
+
+taskhub run <name|file>          Execute a workflow immediately
+taskhub test <name|file>         Dry-run — no network calls, no side effects
+taskhub validate <name|file>     Validate YAML syntax and step references
 taskhub watch [--tray]           Start daemon (all triggers active)
 taskhub list                     List recent workflow runs
 taskhub logs <name>              Show step-level logs for a workflow
 
+taskhub workflow new <name>      Create a workflow from template and open in $EDITOR
+taskhub workflow open [name]     Open a workflow (or the workflows dir) in $EDITOR
+taskhub workflow list            List all workflows with their trigger type
+
 taskhub secret set <key>         Store an encrypted secret (prompted)
 taskhub secret list              List all secret keys (values never shown)
-taskhub secret remove <key>      Delete a secret
+taskhub secret rm <key>          Delete a secret
 
 taskhub plugin install <path>    Install a WASM plugin from a directory
 taskhub plugin list              List installed plugins and their actions
 ```
+
+`<name|file>` accepts either a workflow name (`my-workflow`) or a path (`./my-workflow.yaml`).
+Names resolve automatically from `~/.taskhub/workflows/`.
 
 ---
 
