@@ -1,5 +1,6 @@
 pub mod dashboard;
 pub mod init;
+pub mod interactive;
 pub mod list;
 pub mod logs;
 pub mod plugin;
@@ -7,3 +8,4 @@ pub mod run;
 pub mod secret;
 pub mod validate;
 pub mod watch;
+pub mod workflow;

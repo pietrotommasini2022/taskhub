@@ -48,3 +48,4 @@ lettre               = { version = "0.11", default-features = false, features = 
 imap                 = { version = "3.0.0-alpha.15", default-features = false, features = ["native-tls"] }
 native-tls           = "0.2"
 tokio-postgres       = "0.7"
+inquire              = "0.7"

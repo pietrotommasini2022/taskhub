@@ -15,7 +15,16 @@ pub fn run(workflow: &str, run_id: Option<&str>) -> Result<()> {
     let matching: Vec<_> = all_runs
         .iter()
         .filter(|r| {
-            let name_match = r.workflow_name == workflow || r.workflow_id == workflow;
+            let name_match = r.workflow_name == workflow
+                || r.workflow_id == workflow
+                || r.workflow_id
+                    .rsplit(['/', '\\'])
+                    .next()
+                    .map(|fname| {
+                        fname == format!("{workflow}.yaml")
+                            || fname == format!("{workflow}.yml")
+                    })
+                    .unwrap_or(false);
             match run_id {
                 Some(id) => name_match && r.id == id,
                 None => name_match,

@@ -22,3 +22,4 @@ tracing-subscriber.workspace = true
 dirs.workspace    = true
 rpassword.workspace = true
 tray-icon.workspace = true
+inquire.workspace   = true
